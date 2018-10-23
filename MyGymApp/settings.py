@@ -25,12 +25,16 @@ SECRET_KEY = 'no5j5j9yb^_drtl8q5bz$8(m_c^)toy#a5j7_*68kt$p8$3z6y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'fitnessapp-1539770275671.appspot.com',
+    '127.0.0.1',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'MyGymApp'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,13 +76,40 @@ WSGI_APPLICATION = 'MyGymApp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# [START db_setup]
+if os.getenv('GAE_APPLICATION', None):
+    # Running on production App Engine, so connect to Google Cloud SQL using
+    # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '/cloudsql/fitnessapp-1539770275671:europe-north1:workout',
+            'USER': 'jaakkopohja',
+            'PASSWORD': 'secret1234',
+            'NAME': 'workout1',
+        }
     }
-}
+else:
+    # Running locally so connect to either a local MySQL instance or connect to
+    # Cloud SQL via the proxy. To start the proxy via command line:
+    #
+    #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
+    #
+    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+            'NAME': 'workout1',
+            'USER': 'jaakkopohja',
+            'PASSWORD': 'secret1234',
+        }
+    }
+# [END db_setup]
+
+
+
 
 
 # Password validation
