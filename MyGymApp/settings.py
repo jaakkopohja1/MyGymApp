@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'fitnessapp-1539770275671.appspot.com',
     '127.0.0.1',
+    'localhost',
 ]
 
 
